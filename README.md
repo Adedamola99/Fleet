@@ -1,8 +1,8 @@
-# FleetOS 🚗
+# FahrVerse 🚗
 
 **Fleet Finance & Driver Management SaaS (MVP)**
 
-FleetOS is a modern SaaS dashboard designed to help fleet owners manage vehicles, drivers, and weekly remittances with full transparency.
+FahrVerse is a modern SaaS dashboard designed to help fleet owners manage vehicles, drivers, and weekly remittances with full transparency.
 
 This MVP focuses on building a scalable frontend foundation before backend integration.
 
@@ -21,7 +21,7 @@ Fleet owners who lease vehicles to drivers (Uber/Bolt/logistics drivers) often s
 
 Most operators rely on spreadsheets, WhatsApp, or manual tracking — which does not scale and increases financial risk.
 
-FleetOS solves this by providing a structured, analytics-driven management dashboard.
+FahrVerse solves this by providing a structured, analytics-driven management dashboard.
 
 ---
 
@@ -114,7 +114,7 @@ This version focuses on:
 
 ## 🎨 Design Philosophy
 
-FleetOS is designed to feel:
+FahrVerse is designed to feel:
 
 - Clean
 - Professional
@@ -194,7 +194,7 @@ Future development phases include:
 
 ## 🎯 Future Vision
 
-FleetOS can evolve into:
+FahrVerse can evolve into:
 
 - Fleet financing infrastructure
 - Driver credit scoring platform
@@ -227,4 +227,4 @@ npm run build
 
 ## 💡 Author Vision
 
-FleetOS aims to modernize fleet leasing operations by replacing spreadsheets and informal tracking systems with structured, transparent, scalable software.
+FahrVerse aims to modernize fleet leasing operations by replacing spreadsheets and informal tracking systems with structured, transparent, scalable software.

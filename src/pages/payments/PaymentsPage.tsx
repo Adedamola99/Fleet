@@ -5,6 +5,7 @@ import {
   Clock,
   CheckCircle,
   Search,
+  ChevronRight,
 } from "lucide-react";
 import Badge from "../../components/ui/Badge";
 import Avatar from "../../components/ui/Avatar";
@@ -35,19 +36,27 @@ export default function PaymentsPage() {
     return (statusFilter === "All" || p.status === statusFilter) && matchSearch;
   });
 
+  const collectionPct = Math.round((113000 / 203000) * 100);
+
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div>
-        <h1 className="text-xl font-bold text-slate-100 tracking-tight">
+        <h1
+          className="text-lg md:text-xl font-bold tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
           Payments
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p
+          className="text-xs md:text-sm mt-0.5"
+          style={{ color: "var(--text-muted)" }}
+        >
           Track weekly driver payments and collections
         </p>
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard
           title="Total Collected"
           value={formatCurrency(totalCollected)}
@@ -82,64 +91,80 @@ export default function PaymentsPage() {
       </div>
 
       {/* Weekly summary */}
-      <div className="card p-5">
-        <h2 className="section-title mb-4">Week Ending March 17, 2024</h2>
-        <div className="grid grid-cols-3 gap-4">
+      <div className="card p-4 md:p-5">
+        <h2 className="section-title mb-3">Week Ending March 17, 2024</h2>
+        <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4">
           {[
             {
               label: "Expected",
               val: formatCurrency(203000),
-              color: "text-slate-200",
+              color: "var(--text-primary)",
             },
             {
               label: "Collected",
               val: formatCurrency(113000),
-              color: "text-emerald-400",
+              color: "#10b981",
             },
             {
               label: "Remaining",
               val: formatCurrency(90000),
-              color: "text-amber-400",
+              color: "#f59e0b",
             },
           ].map((s) => (
             <div
               key={s.label}
-              className="bg-white/[0.03] rounded-lg p-4 text-center"
+              className="rounded-lg p-3 text-center"
+              style={{ backgroundColor: "var(--bg-elevated)" }}
             >
-              <p className="text-xs text-slate-500 mb-1">{s.label}</p>
-              <p className={`text-xl font-bold ${s.color}`}>{s.val}</p>
+              <p
+                className="text-[10px] md:text-xs mb-1"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {s.label}
+              </p>
+              <p
+                className="text-sm md:text-lg font-bold"
+                style={{ color: s.color }}
+              >
+                {s.val}
+              </p>
             </div>
           ))}
         </div>
-        <div className="mt-4">
-          <div className="flex justify-between text-xs text-slate-500 mb-1">
-            <span>Collection progress</span>
-            <span>{Math.round((113000 / 203000) * 100)}%</span>
-          </div>
-          <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-accent rounded-full"
-              style={{ width: `${Math.round((113000 / 203000) * 100)}%` }}
-            />
-          </div>
+        <div
+          className="flex justify-between text-xs mb-1.5"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <span>Collection progress</span>
+          <span>{collectionPct}%</span>
+        </div>
+        <div
+          className="h-2 rounded-full overflow-hidden"
+          style={{ backgroundColor: "var(--hover-bg)" }}
+        >
+          <div
+            className="h-full bg-accent rounded-full"
+            style={{ width: `${collectionPct}%` }}
+          />
         </div>
       </div>
 
-      {/* Filters + Table */}
-      <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[180px] max-w-xs">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 min-w-0">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2"
+            style={{ color: "var(--text-muted)" }}
           />
           <input
-            className="input pl-9 py-2 text-xs"
+            className="input pl-9 py-2 text-xs w-full"
             placeholder="Search driver..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1.5 flex-wrap">
           {(["All", "Paid", "Late", "Pending"] as const).map((s) => (
             <button
               key={s}
@@ -152,10 +177,11 @@ export default function PaymentsPage() {
         </div>
       </div>
 
-      <div className="card overflow-hidden">
+      {/* Desktop table */}
+      <div className="card overflow-hidden hidden md:block">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="border-b border-white/[0.06]">
+            <thead className="border-b border-[var(--border)]">
               <tr>
                 <th className="th">Driver</th>
                 <th className="th">Vehicle</th>
@@ -177,31 +203,49 @@ export default function PaymentsPage() {
                         {driver && (
                           <Avatar initials={driver.avatar} size="sm" />
                         )}
-                        <span className="text-sm text-slate-300">
+                        <span
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
                           {driver?.name ?? "—"}
                         </span>
                       </div>
                     </td>
-                    <td className="td text-xs font-mono text-slate-400">
+                    <td
+                      className="td text-xs font-mono"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {vehicle?.plate ?? "—"}
                     </td>
-                    <td className="td font-mono font-semibold text-slate-200">
+                    <td
+                      className="td font-mono font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {formatCurrency(p.amount)}
                     </td>
-                    <td className="td text-sm text-slate-400">
+                    <td
+                      className="td text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {formatDate(p.weekEnding)}
                     </td>
                     <td className="td">
                       <Badge status={p.status} />
                     </td>
-                    <td className="td text-sm text-slate-400">
+                    <td
+                      className="td text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {p.paidAt ? (
                         formatDate(p.paidAt)
                       ) : (
-                        <span className="text-slate-600">—</span>
+                        <span style={{ color: "var(--text-muted)" }}>—</span>
                       )}
                     </td>
-                    <td className="td text-xs text-slate-500">
+                    <td
+                      className="td text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
                       {p.note || "—"}
                     </td>
                   </tr>
@@ -210,11 +254,118 @@ export default function PaymentsPage() {
             </tbody>
           </table>
           {filtered.length === 0 && (
-            <div className="text-center py-10 text-slate-500 text-sm">
+            <div
+              className="text-center py-10 text-sm"
+              style={{ color: "var(--text-muted)" }}
+            >
               No payments match your filters.
             </div>
           )}
         </div>
+      </div>
+
+      {/* Mobile card list */}
+      <div className="md:hidden space-y-2.5">
+        {filtered.length === 0 && (
+          <div
+            className="text-center py-10 text-sm"
+            style={{ color: "var(--text-muted)" }}
+          >
+            No payments match your filters.
+          </div>
+        )}
+        {filtered.map((p) => {
+          const driver = drivers.find((d) => d.id === p.driverId);
+          const vehicle = vehicles.find((v) => v.id === p.vehicleId);
+          return (
+            <div key={p.id} className="card p-4">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {driver && <Avatar initials={driver.avatar} size="sm" />}
+                  <div className="min-w-0">
+                    <p
+                      className="text-sm font-semibold truncate"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {driver?.name ?? "—"}
+                    </p>
+                    <p
+                      className="text-xs font-mono"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {vehicle?.plate ?? "—"}
+                    </p>
+                  </div>
+                </div>
+                <Badge status={p.status} />
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div
+                  className="rounded-lg p-2"
+                  style={{ backgroundColor: "var(--bg-elevated)" }}
+                >
+                  <p
+                    className="text-xs font-bold font-mono"
+                    style={{ color: "var(--text-primary)" }}
+                  >
+                    {formatCurrency(p.amount)}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Amount
+                  </p>
+                </div>
+                <div
+                  className="rounded-lg p-2"
+                  style={{ backgroundColor: "var(--bg-elevated)" }}
+                >
+                  <p
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {formatDate(p.weekEnding)}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Week End
+                  </p>
+                </div>
+                <div
+                  className="rounded-lg p-2"
+                  style={{ backgroundColor: "var(--bg-elevated)" }}
+                >
+                  <p
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {p.paidAt ? formatDate(p.paidAt) : "—"}
+                  </p>
+                  <p
+                    className="text-[10px] mt-0.5"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Paid At
+                  </p>
+                </div>
+              </div>
+              {p.note && (
+                <p
+                  className="text-xs mt-2.5 pt-2.5 border-t"
+                  style={{
+                    color: "var(--text-muted)",
+                    borderColor: "var(--border)",
+                  }}
+                >
+                  Note: {p.note}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

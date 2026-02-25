@@ -1,73 +1,147 @@
 import { useState } from "react";
-import { Zap, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  Zap,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  Users,
+  Shield,
+} from "lucide-react";
+import { useApp } from "../../context/AppContext";
 
-interface LoginPageProps {
-  onLogin: (email: string, password: string) => void;
-}
-
-export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState("admin@fleeetos.com");
-  const [password, setPassword] = useState("password");
+export default function LoginPage() {
+  const { login } = useApp();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"admin" | "driver">("admin");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    onLogin(email, password);
+    await new Promise((r) => setTimeout(r, 900));
+    login(
+      email ||
+        (mode === "admin" ? "admin@fleeetos.com" : "driver@fleeetos.com"),
+      password,
+      mode,
+    );
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 flex items-center justify-center p-4">
-      {/* Background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:64px_64px]" />
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{ backgroundColor: "var(--bg-base)" }}
+    >
+      {/* Subtle grid */}
+      <div
+        className="absolute inset-0 opacity-40"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10 animate-fade-in">
-        {/* Logo */}
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-sm mb-8 transition-colors hover:text-accent"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <ArrowLeft size={14} /> Back to site
+        </button>
+
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent mb-4">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent mb-4 shadow-xl shadow-accent/30">
             <Zap size={22} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">
-            FleetOS
+          <h1
+            className="text-2xl font-black tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Welcome to FahrVerse
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Fleet Finance & Driver Management
+          <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>
+            Sign in to your dashboard
           </p>
         </div>
 
-        {/* Card */}
-        <div className="card p-8 border border-white/[0.08]">
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-slate-100">
-              Welcome back
-            </h2>
-            <p className="text-sm text-slate-500 mt-0.5">
-              Sign in to your fleet dashboard
-            </p>
+        {/* Role selector */}
+        <div
+          className="flex gap-2 p-1 rounded-xl mb-6"
+          style={{
+            backgroundColor: "var(--bg-elevated)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          {(
+            [
+              { key: "admin", label: "Fleet Owner / Admin", icon: Shield },
+              { key: "driver", label: "I'm a Driver", icon: Users },
+            ] as const
+          ).map((r) => (
+            <button
+              key={r.key}
+              onClick={() => setMode(r.key)}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                mode === r.key
+                  ? "bg-accent text-white shadow-lg shadow-accent/20"
+                  : ""
+              }`}
+              style={mode !== r.key ? { color: "var(--text-secondary)" } : {}}
+            >
+              <r.icon size={15} /> {r.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="card p-7">
+          <h2
+            className="text-base font-bold mb-5"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            {mode === "admin"
+              ? "🏢 Admin Dashboard Access"
+              : "🚗 Driver Portal Access"}
+          </h2>
+
+          {/* Demo hint */}
+          <div
+            className="rounded-xl px-4 py-3 mb-5 text-xs"
+            style={{
+              backgroundColor: "rgba(59,130,246,0.06)",
+              border: "1px solid rgba(59,130,246,0.15)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            <strong className="text-accent">Demo mode:</strong> Leave fields
+            empty and click Sign In.
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                Email address
-              </label>
+              <label className="label mb-1.5">Email Address</label>
               <input
                 type="email"
                 className="input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@fleeetos.com"
-                required
+                placeholder={
+                  mode === "admin"
+                    ? "admin@fleeetos.com"
+                    : "driver@fleeetos.com"
+                }
               />
             </div>
-
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
+              <label className="label mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
@@ -75,38 +149,36 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: "var(--text-muted)" }}
                 >
                   {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-slate-400 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="rounded border-white/20 bg-white/5 accent-accent"
-                />
+            <div className="flex items-center justify-between">
+              <label
+                className="flex items-center gap-2 text-xs cursor-pointer"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <input type="checkbox" className="rounded accent-accent" />{" "}
                 Remember me
               </label>
               <button
                 type="button"
-                className="text-accent hover:text-accent-light transition-colors text-xs"
+                className="text-accent hover:text-accent-dark transition-colors text-xs font-medium"
               >
                 Forgot password?
               </button>
             </div>
-
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full justify-center py-2.5 mt-2"
+              className="btn btn-primary w-full justify-center py-3 text-base font-bold mt-2"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -115,25 +187,27 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  Sign in <ArrowRight size={15} />
+                  Sign In <ArrowRight size={16} />
                 </span>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/[0.06] text-center">
-            <p className="text-xs text-slate-500">
-              Don't have an account?{" "}
-              <button className="text-accent hover:text-accent-light transition-colors font-medium">
-                Contact your administrator
+          <div
+            className="mt-5 pt-5 text-center"
+            style={{ borderTop: "1px solid var(--border)" }}
+          >
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              Want to drive with us?{" "}
+              <button
+                onClick={() => navigate("/apply")}
+                className="text-accent hover:text-accent-dark font-semibold transition-colors"
+              >
+                Apply as a driver →
               </button>
             </p>
           </div>
         </div>
-
-        <p className="text-center text-xs text-slate-600 mt-6">
-          © 2024 FleetOS. All rights reserved.
-        </p>
       </div>
     </div>
   );

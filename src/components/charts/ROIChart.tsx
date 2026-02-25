@@ -31,8 +31,8 @@ export default function ROIChart() {
         />
         <Tooltip
           contentStyle={{
-            background: "#0f1a3d",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border-strong)",
             borderRadius: 8,
             fontSize: 12,
           }}

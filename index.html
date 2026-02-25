@@ -2,16 +2,87 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FleetOS — Fleet Finance & Driver Management</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="FahrVerse" />
+    <meta name="application-name" content="FahrVerse" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="msapplication-TileColor" content="#060b1a" />
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="FahrVerse — Nigeria's driver-first fleet platform. No car? We give you one. Drive on Uber or Bolt, pay a flat weekly amount, keep everything else."
+    />
+    <meta
+      name="keywords"
+      content="FahrVerse, fleet Nigeria, driver jobs Lagos, car hire purchase, Uber driver Nigeria, Bolt driver"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="FahrVerse — We Give You the Car" />
+    <meta
+      property="og:description"
+      content="Nigeria's driver-first fleet platform. Apply in 5 minutes. Be on the road in 7 days."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/icon-512.svg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FahrVerse — We Give You the Car" />
+    <meta
+      name="twitter:description"
+      content="No car? No problem. Apply to drive in 5 minutes."
+    />
+
+    <title>FahrVerse — Nigeria's Driver-First Fleet Platform</title>
+
+    <!-- PWA assets -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+    <link rel="mask-icon" href="/favicon.svg" color="#3b82f6" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Apply saved theme before paint — prevents flash -->
+    <script>
+      try {
+        const t = localStorage.getItem("fahrverse-theme");
+        document.documentElement.classList.toggle(
+          "dark",
+          t ? t === "dark" : true,
+        );
+      } catch (e) {}
+    </script>
+
+    <style>
+      /* Minimal safe-area support for notched phones */
+      body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    </style>
   </head>
-  <body class="bg-navy-950 text-slate-100 antialiased">
+  <body
+    class="antialiased"
+    style="background-color: var(--bg-base); color: var(--text-primary)"
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

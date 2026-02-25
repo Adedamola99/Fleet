@@ -1,5 +1,5 @@
 {
-  "name": "Fleet",
+  "name": "FahrVerse",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,7 +11,8 @@
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.30.3",
     "recharts": "^2.12.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "workbox-window": "^7.4.0"
   },
   "scripts": {
     "dev": "vite",
@@ -43,6 +44,7 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.3.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vite-plugin-pwa": "^1.2.0"
   }
 }

@@ -22,32 +22,46 @@ export default function StatCard({
   return (
     <div className="stat-card card-hover animate-fade-in">
       <div className="flex items-start justify-between">
-        <div className={`p-2.5 rounded-lg bg-white/[0.05] ${iconColor}`}>
+        <div
+          className={`p-2.5 rounded-lg ${iconColor}`}
+          style={{ backgroundColor: "var(--hover-bg)" }}
+        >
           <Icon size={18} strokeWidth={2} />
         </div>
         {change && (
           <span
             className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
               changeType === "up"
-                ? "text-emerald-400 bg-emerald-500/10"
+                ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10"
                 : changeType === "down"
-                  ? "text-red-400 bg-red-500/10"
-                  : "text-slate-400 bg-white/[0.05]"
+                  ? "text-red-600 dark:text-red-400 bg-red-500/10"
+                  : "bg-[var(--hover-bg)]"
             }`}
+            style={
+              changeType === "neutral" ? { color: "var(--text-muted)" } : {}
+            }
           >
             {change}
           </span>
         )}
       </div>
       <div>
-        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+        <p
+          className="text-xs font-semibold uppercase tracking-wider"
+          style={{ color: "var(--text-muted)" }}
+        >
           {title}
         </p>
-        <p className="text-2xl font-bold text-slate-100 mt-1 tracking-tight">
+        <p
+          className="text-2xl font-black mt-1 tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
           {value}
         </p>
         {subtitle && (
-          <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+          <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>
+            {subtitle}
+          </p>
         )}
       </div>
     </div>

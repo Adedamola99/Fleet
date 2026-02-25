@@ -5,19 +5,64 @@ import PaymentPieChart from "../../components/charts/PaymentPieChart";
 import ROIChart from "../../components/charts/ROIChart";
 import StatCard from "../../components/ui/StatCard";
 
+const insights = [
+  {
+    icon: "🏆",
+    title: "Top Performer",
+    desc: "Emeka Obi has maintained a 95+ score for 3 consecutive months.",
+  },
+  {
+    icon: "⚠️",
+    title: "High Risk Driver",
+    desc: "Fatima Bello has ₦84,000 outstanding and a 78/100 risk score.",
+  },
+  {
+    icon: "📈",
+    title: "Revenue Growth",
+    desc: "Fleet revenue grew 30.8% over the last 6 months.",
+  },
+  {
+    icon: "🔧",
+    title: "Maintenance Due",
+    desc: "Kia Cerato (OGN-789-TU) service is overdue by 12 days.",
+  },
+  {
+    icon: "💰",
+    title: "Best ROI Month",
+    desc: "March 2024 projected at 28.4% — highest in 6 months.",
+  },
+  {
+    icon: "🎯",
+    title: "Collection Target",
+    desc: "Fleet is on track to hit ₦1.02M collection target this month.",
+  },
+];
+
+const paymentSplit = [
+  { label: "On-Time Rate", val: "73%", color: "#10b981" },
+  { label: "Default Rate", val: "9%", color: "#ef4444" },
+  { label: "Pending Rate", val: "18%", color: "#f59e0b" },
+];
+
 export default function AnalyticsPage() {
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div>
-        <h1 className="text-xl font-bold text-slate-100 tracking-tight">
+        <h1
+          className="text-lg md:text-xl font-bold tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
           Analytics
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p
+          className="text-xs md:text-sm mt-0.5"
+          style={{ color: "var(--text-muted)" }}
+        >
           Fleet financial performance and insights
         </p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard
           title="Avg Monthly Revenue"
           value="₦903,333"
@@ -53,98 +98,77 @@ export default function AnalyticsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card p-5">
-          <div className="mb-5">
-            <h2 className="section-title">Monthly Revenue Trend</h2>
-            <p className="section-sub">Revenue vs collections over 6 months</p>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4">
+        <div className="card p-4 md:p-5">
+          <h2 className="section-title mb-1">Monthly Revenue Trend</h2>
+          <p className="section-sub mb-4">
+            Revenue vs collections over 6 months
+          </p>
           <RevenueChart />
         </div>
 
-        <div className="card p-5">
-          <div className="mb-5">
-            <h2 className="section-title">Fleet ROI</h2>
-            <p className="section-sub">Return on investment per month</p>
-          </div>
+        <div className="card p-4 md:p-5">
+          <h2 className="section-title mb-1">Fleet ROI</h2>
+          <p className="section-sub mb-4">Return on investment per month</p>
           <ROIChart />
         </div>
 
-        <div className="card p-5">
-          <div className="mb-5">
-            <h2 className="section-title">Driver Performance</h2>
-            <p className="section-sub">Performance score comparison</p>
-          </div>
+        <div className="card p-4 md:p-5">
+          <h2 className="section-title mb-1">Driver Performance</h2>
+          <p className="section-sub mb-4">Performance score comparison</p>
           <PerformanceChart />
         </div>
 
-        <div className="card p-5">
-          <div className="mb-5">
-            <h2 className="section-title">Payment Status Distribution</h2>
-            <p className="section-sub">Overall payment health</p>
-          </div>
+        <div className="card p-4 md:p-5">
+          <h2 className="section-title mb-1">Payment Status Distribution</h2>
+          <p className="section-sub mb-4">Overall payment health</p>
           <PaymentPieChart />
-          <div className="grid grid-cols-3 gap-3 mt-2">
-            {[
-              { label: "On-Time Rate", val: "73%", color: "text-emerald-400" },
-              { label: "Default Rate", val: "9%", color: "text-red-400" },
-              { label: "Pending Rate", val: "18%", color: "text-amber-400" },
-            ].map((s) => (
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            {paymentSplit.map((s) => (
               <div
                 key={s.label}
-                className="bg-white/[0.03] rounded-lg p-3 text-center"
+                className="rounded-lg p-3 text-center"
+                style={{ backgroundColor: "var(--bg-elevated)" }}
               >
-                <p className={`text-xl font-bold ${s.color}`}>{s.val}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+                <p className="text-lg font-bold" style={{ color: s.color }}>
+                  {s.val}
+                </p>
+                <p
+                  className="text-[10px] mt-0.5"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {s.label}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Insights */}
-      <div className="card p-5">
+      {/* Key Insights */}
+      <div className="card p-4 md:p-5">
         <h2 className="section-title mb-4">Key Insights</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {[
-            {
-              icon: "🏆",
-              title: "Top Performer",
-              desc: "Emeka Obi has maintained a 95+ score for 3 consecutive months.",
-            },
-            {
-              icon: "⚠️",
-              title: "High Risk Driver",
-              desc: "Fatima Bello has ₦84,000 outstanding and a 78/100 risk score.",
-            },
-            {
-              icon: "📈",
-              title: "Revenue Growth",
-              desc: "Fleet revenue grew 30.8% over the last 6 months.",
-            },
-            {
-              icon: "🔧",
-              title: "Maintenance Due",
-              desc: "Kia Cerato (OGN-789-TU) service is overdue by 12 days.",
-            },
-            {
-              icon: "💰",
-              title: "Best ROI Month",
-              desc: "March 2024 projected at 28.4% — highest in 6 months.",
-            },
-            {
-              icon: "🎯",
-              title: "Collection Target",
-              desc: "Fleet is on track to hit ₦1.02M collection target this month.",
-            },
-          ].map((i) => (
+          {insights.map((i) => (
             <div
               key={i.title}
-              className="bg-white/[0.03] border border-white/[0.05] rounded-xl p-4"
+              className="rounded-xl border p-4"
+              style={{
+                backgroundColor: "var(--bg-elevated)",
+                borderColor: "var(--border)",
+              }}
             >
               <div className="text-2xl mb-2">{i.icon}</div>
-              <p className="font-semibold text-slate-200 text-sm">{i.title}</p>
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <p
+                className="font-semibold text-sm"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {i.title}
+              </p>
+              <p
+                className="text-xs mt-1 leading-relaxed"
+                style={{ color: "var(--text-muted)" }}
+              >
                 {i.desc}
               </p>
             </div>

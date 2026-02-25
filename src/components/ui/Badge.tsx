@@ -22,7 +22,7 @@ export default function Badge({ status, dot = true }: BadgeProps) {
   return (
     <span className={`badge badge-${variant}`}>
       {dot && (
-        <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
+        <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
       )}
       {status}
     </span>

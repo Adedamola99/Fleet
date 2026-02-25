@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#060b1a"/>
+  <rect width="192" height="192" rx="40" fill="#3b82f6" opacity="0.15"/>
+  <!-- Zap icon centered -->
+  <g transform="translate(96,96)">
+    <polygon points="-18,-34 6,-4 -6,-4 18,34 -6,4 6,4" fill="#3b82f6" stroke="none"/>
+    <polygon points="-18,-34 6,-4 -6,-4 18,34 -6,4 6,4" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" opacity="0.3"/>
+  </g>
+  <!-- FV letters -->
+  <text x="96" y="168" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="900" fill="rgba(255,255,255,0.35)" letter-spacing="3">FV</text>
+</svg>

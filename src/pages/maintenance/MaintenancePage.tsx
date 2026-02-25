@@ -60,6 +60,13 @@ const maintenanceRecords = [
   },
 ];
 
+const statusColor = (s: string) =>
+  s === "Completed"
+    ? { bg: "rgba(16,185,129,0.12)", text: "#10b981" }
+    : s === "In Progress"
+      ? { bg: "rgba(245,158,11,0.12)", text: "#f59e0b" }
+      : { bg: "rgba(59,130,246,0.12)", text: "#3b82f6" };
+
 export default function MaintenancePage() {
   const totalCost = maintenanceRecords
     .filter((r) => r.status === "Completed")
@@ -70,18 +77,28 @@ export default function MaintenancePage() {
   const upcoming = maintenanceRecords.filter(
     (r) => r.status === "Upcoming",
   ).length;
+  const completed = maintenanceRecords.filter(
+    (r) => r.status === "Completed",
+  ).length;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div>
-        <h1 className="text-xl font-bold text-slate-100 tracking-tight">
+        <h1
+          className="text-lg md:text-xl font-bold tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
           Maintenance
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p
+          className="text-xs md:text-sm mt-0.5"
+          style={{ color: "var(--text-muted)" }}
+        >
           Track vehicle service history and upcoming schedules
         </p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard
           title="YTD Cost"
           value={`₦${(totalCost / 1000).toFixed(0)}k`}
@@ -102,14 +119,14 @@ export default function MaintenancePage() {
         />
         <StatCard
           title="Completed"
-          value={String(
-            maintenanceRecords.filter((r) => r.status === "Completed").length,
-          )}
+          value={String(completed)}
           icon={CheckCircle}
           iconColor="text-emerald-400"
         />
       </div>
-      <div className="card p-5">
+
+      {/* Service schedule grid */}
+      <div className="card p-4 md:p-5">
         <h2 className="section-title mb-4">Service Schedule</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {vehicles.map((v) => {
@@ -122,70 +139,91 @@ export default function MaintenancePage() {
                 : daysToService < 30
                   ? "Due Soon"
                   : "OK";
+            const urgencyStyle =
+              urgency === "Overdue"
+                ? { bg: "rgba(239,68,68,0.12)", text: "#ef4444" }
+                : urgency === "Due Soon"
+                  ? { bg: "rgba(245,158,11,0.12)", text: "#f59e0b" }
+                  : { bg: "rgba(16,185,129,0.12)", text: "#10b981" };
             return (
               <div
                 key={v.id}
-                className="bg-white/[0.03] border border-white/[0.05] rounded-xl p-4"
+                className="rounded-xl p-4 border"
+                style={{
+                  backgroundColor: "var(--bg-elevated)",
+                  borderColor: "var(--border)",
+                }}
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div
-                    className="w-2 h-2 rounded-full"
+                    className="w-2 h-2 rounded-full flex-shrink-0"
                     style={{ background: v.color }}
                   />
-                  <p className="font-semibold text-slate-200 text-sm">
+                  <p
+                    className="font-semibold text-sm flex-1 truncate"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {v.make} {v.model}
                   </p>
-                  <span className="font-mono text-xs text-slate-500 ml-auto">
+                  <span
+                    className="font-mono text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     {v.plate}
                   </span>
                 </div>
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1.5 text-xs mb-3">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Last service</span>
-                    <span className="text-slate-400">
+                    <span style={{ color: "var(--text-muted)" }}>
+                      Last service
+                    </span>
+                    <span style={{ color: "var(--text-secondary)" }}>
                       {formatDate(v.lastService)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Next service</span>
-                    <span
-                      className={
-                        urgency === "Overdue"
-                          ? "text-red-400"
-                          : urgency === "Due Soon"
-                            ? "text-amber-400"
-                            : "text-emerald-400"
-                      }
-                    >
+                    <span style={{ color: "var(--text-muted)" }}>
+                      Next service
+                    </span>
+                    <span style={{ color: urgencyStyle.text }}>
                       {formatDate(v.nextService)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Mileage</span>
-                    <span className="text-slate-400">
+                    <span style={{ color: "var(--text-muted)" }}>Mileage</span>
+                    <span style={{ color: "var(--text-secondary)" }}>
                       {v.mileage.toLocaleString()} km
                     </span>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <span
-                    className={`text-xs font-semibold px-2 py-0.5 rounded-full ${urgency === "Overdue" ? "bg-red-500/15 text-red-400" : urgency === "Due Soon" ? "bg-amber-500/15 text-amber-400" : "bg-emerald-500/15 text-emerald-400"}`}
-                  >
-                    {urgency}
-                  </span>
-                </div>
+                <span
+                  className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: urgencyStyle.bg,
+                    color: urgencyStyle.text,
+                  }}
+                >
+                  {urgency}
+                </span>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Service history — table desktop, cards mobile */}
       <div className="card overflow-hidden">
-        <div className="p-5 border-b border-white/[0.06]">
+        <div
+          className="p-4 md:p-5 border-b"
+          style={{ borderColor: "var(--border)" }}
+        >
           <h2 className="section-title">Service History</h2>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Desktop table */}
+        <div className="overflow-x-auto hidden sm:block">
           <table className="w-full">
-            <thead className="border-b border-white/[0.06]">
+            <thead className="border-b border-[var(--border)]">
               <tr>
                 <th className="th">Vehicle</th>
                 <th className="th">Service</th>
@@ -198,31 +236,51 @@ export default function MaintenancePage() {
             <tbody>
               {maintenanceRecords.map((r) => {
                 const v = vehicles.find((veh) => veh.id === r.vehicleId);
+                const sc = statusColor(r.status);
                 return (
                   <tr key={r.id} className="table-row">
                     <td className="td">
-                      <p className="text-sm text-slate-300">
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
                         {v?.make} {v?.model}
                       </p>
-                      <p className="text-xs font-mono text-slate-500">
+                      <p
+                        className="text-xs font-mono"
+                        style={{ color: "var(--text-muted)" }}
+                      >
                         {v?.plate}
                       </p>
                     </td>
-                    <td className="td font-semibold text-slate-200 text-sm">
+                    <td
+                      className="td font-semibold text-sm"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {r.type}
                     </td>
-                    <td className="td text-xs text-slate-400">
+                    <td
+                      className="td text-xs"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {r.description}
                     </td>
-                    <td className="td text-sm text-slate-400">
+                    <td
+                      className="td text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       {formatDate(r.date)}
                     </td>
-                    <td className="td font-mono text-slate-300">
+                    <td
+                      className="td font-mono"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       ₦{r.cost.toLocaleString()}
                     </td>
                     <td className="td">
                       <span
-                        className={`badge ${r.status === "Completed" ? "badge-green" : r.status === "In Progress" ? "badge-yellow" : "badge-blue"}`}
+                        className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: sc.bg, color: sc.text }}
                       >
                         {r.status}
                       </span>
@@ -232,6 +290,62 @@ export default function MaintenancePage() {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile cards */}
+        <div
+          className="sm:hidden divide-y"
+          style={{ borderColor: "var(--border)" }}
+        >
+          {maintenanceRecords.map((r) => {
+            const v = vehicles.find((veh) => veh.id === r.vehicleId);
+            const sc = statusColor(r.status);
+            return (
+              <div key={r.id} className="p-4">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div>
+                    <p
+                      className="font-bold text-sm"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {r.type}
+                    </p>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {v?.make} {v?.model} ·{" "}
+                      <span className="font-mono">{v?.plate}</span>
+                    </p>
+                  </div>
+                  <span
+                    className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: sc.bg, color: sc.text }}
+                  >
+                    {r.status}
+                  </span>
+                </div>
+                <p
+                  className="text-xs mb-2"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  {r.description}
+                </p>
+                <div
+                  className="flex justify-between text-xs"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  <span>{formatDate(r.date)}</span>
+                  <span
+                    className="font-mono font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    ₦{r.cost.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

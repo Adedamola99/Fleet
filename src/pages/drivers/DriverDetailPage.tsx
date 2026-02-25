@@ -14,7 +14,7 @@ export default function DriverDetailPage() {
 
   if (!driver)
     return (
-      <div className="text-center py-20 text-slate-500">
+      <div className="text-center py-20" style={{ color: "var(--text-muted)" }}>
         <p>Driver not found.</p>
         <button
           onClick={() => navigate("/drivers")}
@@ -38,8 +38,45 @@ export default function DriverDetailPage() {
         ? "bg-amber-400"
         : "bg-emerald-400";
 
+  const financeCards = [
+    {
+      label: "Total Paid",
+      val: formatCurrency(driver.totalPaid),
+      color: "#10b981",
+    },
+    {
+      label: "Outstanding",
+      val: formatCurrency(driver.outstandingBalance),
+      color: driver.outstandingBalance > 0 ? "#ef4444" : "#10b981",
+    },
+    {
+      label: "Weekly Rate",
+      val: formatCurrency(driver.weeklyPayment),
+      color: "#3b82f6",
+    },
+    {
+      label: "Joined",
+      val: formatDate(driver.joinDate),
+      color: "var(--text-secondary)",
+    },
+  ];
+
+  const vehicleStats = vehicle
+    ? [
+        {
+          label: "Vehicle",
+          val: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+        },
+        { label: "Plate", val: vehicle.plate },
+        { label: "Status", val: vehicle.status },
+        { label: "Mileage", val: `${vehicle.mileage.toLocaleString()} km` },
+        { label: "Last Service", val: formatDate(vehicle.lastService) },
+        { label: "Next Service", val: formatDate(vehicle.nextService) },
+      ]
+    : [];
+
   return (
-    <div className="space-y-5 animate-fade-in max-w-5xl">
+    <div className="space-y-4 animate-fade-in max-w-5xl">
       <button
         onClick={() => navigate("/drivers")}
         className="btn btn-ghost btn-sm"
@@ -49,57 +86,66 @@ export default function DriverDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Profile card */}
-        <div className="card p-6 flex flex-col gap-5">
+        <div className="card p-5 flex flex-col gap-4">
           <div className="flex flex-col items-center text-center gap-3">
             <Avatar initials={driver.avatar} size="lg" />
             <div>
-              <h2 className="font-bold text-slate-100 text-lg">
+              <h2
+                className="font-bold text-lg"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {driver.name}
               </h2>
-              <Badge status={driver.status} />
+              <div className="mt-1">
+                <Badge status={driver.status} />
+              </div>
             </div>
           </div>
-          <div className="space-y-3 border-t border-white/[0.06] pt-4">
-            <div className="flex items-center gap-2.5 text-sm text-slate-400">
-              <Mail size={14} className="text-slate-600" /> {driver.email}
+          <div
+            className="space-y-3 border-t pt-4"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <div
+              className="flex items-center gap-2.5 text-sm"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <Mail size={14} style={{ color: "var(--text-muted)" }} />
+              <span className="truncate">{driver.email}</span>
             </div>
-            <div className="flex items-center gap-2.5 text-sm text-slate-400">
-              <Phone size={14} className="text-slate-600" /> {driver.phone}
+            <div
+              className="flex items-center gap-2.5 text-sm"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <Phone size={14} style={{ color: "var(--text-muted)" }} />{" "}
+              {driver.phone}
             </div>
-            <div className="flex items-center gap-2.5 text-sm text-slate-400">
-              <Car size={14} className="text-slate-600" />
+            <div
+              className="flex items-center gap-2.5 text-sm"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              <Car size={14} style={{ color: "var(--text-muted)" }} />
               {vehicle ? `${vehicle.make} ${vehicle.model}` : "No vehicle"}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-4">
-            {[
-              {
-                label: "Total Paid",
-                val: formatCurrency(driver.totalPaid),
-                color: "text-emerald-400",
-              },
-              {
-                label: "Outstanding",
-                val: formatCurrency(driver.outstandingBalance),
-                color:
-                  driver.outstandingBalance > 0
-                    ? "text-red-400"
-                    : "text-emerald-400",
-              },
-              {
-                label: "Weekly Rate",
-                val: formatCurrency(driver.weeklyPayment),
-                color: "text-accent",
-              },
-              {
-                label: "Joined",
-                val: formatDate(driver.joinDate),
-                color: "text-slate-400",
-              },
-            ].map((s) => (
-              <div key={s.label} className="bg-white/[0.03] rounded-lg p-3">
-                <p className="text-xs text-slate-500 mb-0.5">{s.label}</p>
-                <p className={`text-sm font-bold ${s.color}`}>{s.val}</p>
+          <div
+            className="grid grid-cols-2 gap-2 border-t pt-4"
+            style={{ borderColor: "var(--border)" }}
+          >
+            {financeCards.map((s) => (
+              <div
+                key={s.label}
+                className="rounded-lg p-3"
+                style={{ backgroundColor: "var(--bg-elevated)" }}
+              >
+                <p
+                  className="text-[10px] mb-0.5"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {s.label}
+                </p>
+                <p className="text-sm font-bold" style={{ color: s.color }}>
+                  {s.val}
+                </p>
               </div>
             ))}
           </div>
@@ -108,35 +154,50 @@ export default function DriverDetailPage() {
         {/* Right column */}
         <div className="lg:col-span-2 space-y-4">
           {/* Performance & Risk */}
-          <div className="card p-5">
+          <div className="card p-4 md:p-5">
             <h3 className="section-title mb-4">Performance & Risk</h3>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">
+                  <span
+                    className="text-xs uppercase tracking-wide"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     Performance Score
                   </span>
-                  <span className="text-sm font-bold text-slate-200">
+                  <span
+                    className="text-sm font-bold"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     {driver.performanceScore}/100
                   </span>
                 </div>
-                <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                <div
+                  className="h-2 rounded-full overflow-hidden"
+                  style={{ backgroundColor: "var(--hover-bg)" }}
+                >
                   <div
-                    className={`h-full rounded-full transition-all ${driver.performanceScore >= 80 ? "bg-emerald-400" : driver.performanceScore >= 60 ? "bg-amber-400" : "bg-red-400"}`}
+                    className={`h-full rounded-full ${driver.performanceScore >= 80 ? "bg-emerald-400" : driver.performanceScore >= 60 ? "bg-amber-400" : "bg-red-400"}`}
                     style={{ width: `${driver.performanceScore}%` }}
                   />
                 </div>
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-500 uppercase tracking-wide">
+                  <span
+                    className="text-xs uppercase tracking-wide"
+                    style={{ color: "var(--text-muted)" }}
+                  >
                     Risk Score
                   </span>
                   <span className={`text-sm font-bold ${riskColor}`}>
                     {driver.riskScore}/100
                   </span>
                 </div>
-                <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                <div
+                  className="h-2 rounded-full overflow-hidden"
+                  style={{ backgroundColor: "var(--hover-bg)" }}
+                >
                   <div
                     className={`h-full rounded-full ${riskBg}`}
                     style={{ width: `${driver.riskScore}%` }}
@@ -151,8 +212,7 @@ export default function DriverDetailPage() {
                   className="text-amber-400 flex-shrink-0 mt-0.5"
                 />
                 <p className="text-xs text-amber-300">
-                  This driver has a high risk score. Consider reviewing their
-                  payment history and vehicle usage.
+                  High risk score — review payment history and vehicle usage.
                 </p>
               </div>
             )}
@@ -160,32 +220,25 @@ export default function DriverDetailPage() {
 
           {/* Vehicle info */}
           {vehicle && (
-            <div className="card p-5">
+            <div className="card p-4 md:p-5">
               <h3 className="section-title mb-4">Assigned Vehicle</h3>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  {
-                    label: "Vehicle",
-                    val: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-                  },
-                  { label: "Plate", val: vehicle.plate },
-                  { label: "Status", val: vehicle.status },
-                  {
-                    label: "Mileage",
-                    val: `${vehicle.mileage.toLocaleString()} km`,
-                  },
-                  {
-                    label: "Last Service",
-                    val: formatDate(vehicle.lastService),
-                  },
-                  {
-                    label: "Next Service",
-                    val: formatDate(vehicle.nextService),
-                  },
-                ].map((s) => (
-                  <div key={s.label} className="bg-white/[0.03] rounded-lg p-3">
-                    <p className="text-xs text-slate-500 mb-0.5">{s.label}</p>
-                    <p className="text-sm font-semibold text-slate-200">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {vehicleStats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-lg p-3"
+                    style={{ backgroundColor: "var(--bg-elevated)" }}
+                  >
+                    <p
+                      className="text-[10px] mb-0.5"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {s.label}
+                    </p>
+                    <p
+                      className="text-sm font-semibold"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       {s.val}
                     </p>
                   </div>
@@ -194,14 +247,19 @@ export default function DriverDetailPage() {
             </div>
           )}
 
-          {/* Payment history */}
+          {/* Payment history — table on desktop, cards on mobile */}
           <div className="card overflow-hidden">
-            <div className="p-5 border-b border-white/[0.06]">
+            <div
+              className="p-4 md:p-5 border-b"
+              style={{ borderColor: "var(--border)" }}
+            >
               <h3 className="section-title">Payment History</h3>
             </div>
-            <div className="overflow-x-auto">
+
+            {/* Desktop table */}
+            <div className="overflow-x-auto hidden sm:block">
               <table className="w-full">
-                <thead className="border-b border-white/[0.06]">
+                <thead className="border-b border-[var(--border)]">
                   <tr>
                     <th className="th">Week Ending</th>
                     <th className="th">Amount</th>
@@ -215,7 +273,8 @@ export default function DriverDetailPage() {
                     <tr>
                       <td
                         colSpan={5}
-                        className="text-center py-8 text-slate-500 text-sm"
+                        className="text-center py-8 text-sm"
+                        style={{ color: "var(--text-muted)" }}
                       >
                         No payments recorded.
                       </td>
@@ -223,21 +282,37 @@ export default function DriverDetailPage() {
                   ) : (
                     driverPayments.map((p) => (
                       <tr key={p.id} className="table-row">
-                        <td className="td">{formatDate(p.weekEnding)}</td>
-                        <td className="td font-mono">
+                        <td
+                          className="td text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {formatDate(p.weekEnding)}
+                        </td>
+                        <td
+                          className="td font-mono"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {formatCurrency(p.amount)}
                         </td>
                         <td className="td">
                           <Badge status={p.status} />
                         </td>
-                        <td className="td">
+                        <td
+                          className="td text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
                           {p.paidAt ? (
                             formatDate(p.paidAt)
                           ) : (
-                            <span className="text-slate-500">—</span>
+                            <span style={{ color: "var(--text-muted)" }}>
+                              —
+                            </span>
                           )}
                         </td>
-                        <td className="td text-slate-500 text-xs">
+                        <td
+                          className="td text-xs"
+                          style={{ color: "var(--text-muted)" }}
+                        >
                           {p.note || "—"}
                         </td>
                       </tr>
@@ -245,6 +320,52 @@ export default function DriverDetailPage() {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile payment cards */}
+            <div
+              className="sm:hidden divide-y"
+              style={{ borderColor: "var(--border)" }}
+            >
+              {driverPayments.length === 0 ? (
+                <p
+                  className="text-center py-8 text-sm"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  No payments recorded.
+                </p>
+              ) : (
+                driverPayments.map((p) => (
+                  <div key={p.id} className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span
+                        className="text-sm font-mono font-bold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {formatCurrency(p.amount)}
+                      </span>
+                      <Badge status={p.status} />
+                    </div>
+                    <div
+                      className="flex justify-between text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      <span>Week: {formatDate(p.weekEnding)}</span>
+                      <span>
+                        {p.paidAt ? `Paid: ${formatDate(p.paidAt)}` : "—"}
+                      </span>
+                    </div>
+                    {p.note && (
+                      <p
+                        className="text-xs mt-1"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {p.note}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
